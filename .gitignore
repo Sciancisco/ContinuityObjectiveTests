@@ -1,0 +1,5 @@
+.idea/
+solutions/
+*.log
+__pycache__/
+video/
