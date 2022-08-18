@@ -3,3 +3,7 @@ solutions/
 *.log
 __pycache__/
 video/
+
+*.pickle
+
+*.npy
