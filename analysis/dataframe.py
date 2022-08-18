@@ -24,12 +24,12 @@ class DataFrame:
     def __call__(self, **keywords):
         return self._select(**keywords)
 
-    def add(self, data, **kwargs):
-        if set(kwargs.keys()) != set(self._keys):
+    def add(self, data, **keyword):
+        if set(keyword.keys()) != set(self._keys):
             raise KeyError(f"Keys must match {set(self._keys)}.")
 
         d = dict.fromkeys(self._keys)
-        for key, value in kwargs.items():
+        for key, value in keyword.items():
             d[key] = value
 
         self._data.append((d, data))
