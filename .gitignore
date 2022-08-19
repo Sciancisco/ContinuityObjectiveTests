@@ -7,3 +7,9 @@ video/
 *.pickle
 
 *.npy
+
+*.zip
+
+figures/
+
+.ipynb_checkpoints/
