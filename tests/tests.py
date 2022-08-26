@@ -37,7 +37,10 @@ def test_constraint(
     solver = Solver.IPOPT()
     solver.set_maximum_iterations(max_iteration)
     sol = ocp.solve(solver)
+
     del sol.ocp
+    sol.case = i
+    sol.max_iter = max_iteration
 
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     filename = "constraint-{sol_index}-{timestamp}.pickle".format(sol_index=i, timestamp=timestamp)
@@ -60,6 +63,7 @@ def test_objective(
     x_init,
     u_init,
     i,
+    var,
     max_iteration_first,
     max_iteration_second,
     weight,
@@ -84,20 +88,31 @@ def test_objective(
     solver = Solver.IPOPT()
     solver.set_maximum_iterations(max_iteration_first)
     sol1 = ocp.solve(solver)
+
     del sol1.ocp
+    sol1.var = var
+    sol1.weight = weight
+    sol1.max_iter_first = max_iteration_first
+    sol1.max_iter_second = max_iteration_second
+    sol1.case = i
 
     ocp = prepare_ocp_second_pass(biorbd_model_path, x_bounds, u_bounds, sol1, n_threads=n_threads)
     solver = Solver.IPOPT()
     solver.set_maximum_iterations(max_iteration_second)
     sol2 = ocp.solve(solver)
-    del sol2.ocp
     stop = time.time()
 
+    del sol2.ocp
+    sol2.var = var
+    sol2.weight = weight
+    sol2.max_iter_first = max_iteration_first
+    sol2.max_iter_second = max_iteration_second
+    sol2.case = i
     sol2.total_time = stop - start
 
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    filename = "objective-initial-{sol_index}-{weight}-{max_iters}-{timestamp}.pickle".format(
-        sol_index=i, weight=weight, max_iters=max_iteration_first, timestamp=timestamp
+    filename = "objective-{var}-initial-{sol_index}-{weight}-{max_iters}-{timestamp}.pickle".format(
+        var=var, sol_index=i, weight=weight, max_iters=max_iteration_first, timestamp=timestamp
     )
     try:
         with open(sol_dir + filename, "wb") as f:
@@ -106,8 +121,8 @@ def test_objective(
     except:
         logging.exception(f"Error when saving solution {i} to '{sol_dir + filename}'.")
 
-    filename = "objective-final-{sol_index}-{weight}-{max_iters}-{timestamp}.pickle".format(
-        sol_index=i, weight=weight, max_iters=max_iteration_first, timestamp=timestamp
+    filename = "objective-{var}-final-{sol_index}-{weight}-{max_iters}-{timestamp}.pickle".format(
+        var=var, sol_index=i, weight=weight, max_iters=max_iteration_first, timestamp=timestamp
     )
     try:
         with open(sol_dir + filename, "wb") as f:

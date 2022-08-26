@@ -14,6 +14,7 @@ logging.basicConfig(
 parser = argparse.ArgumentParser("Run test for a particular case.")
 parser.add_argument("type", action="store", help="type of test (constraint or objective)")
 parser.add_argument("n", action="store", type=int, help="number of the test")
+parser.add_argument("--var", action="store", type=str, help="what is the variable in this run (varit or varpoids)")
 parser.add_argument(
     "--iters1", action="store", required=True, type=int, help="maximum number of iterations allowed on first pass"
 )
@@ -88,6 +89,7 @@ if args.type == "objective":
         x_inits[args.n],
         u_inits[args.n],
         args.n,
+        args.var,
         args.iters1,
         args.iters2,
         args.weight,
