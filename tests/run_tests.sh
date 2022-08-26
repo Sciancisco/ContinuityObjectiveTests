@@ -21,3 +21,8 @@ for ((n=0; n<100; n=n+1)); do
     python3 obstacle_work_around.py objective $n --iters1 10000 --iters2 10000 --weight ${weight}
   done
 done
+
+# run objective tests optimal weight and iter
+for ((n=0; n<100; n=n+1)); do
+  python3 obstacle_work_around.py objective  $n --iters1 1000 --iters2 10000 --weight 1000000000
+done
